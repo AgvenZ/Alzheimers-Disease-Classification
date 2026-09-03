@@ -4,5 +4,4 @@ __pycache__
 .git
 .gitignore
 README.md
-*.pkl
-!*.pkl
+node_modules
