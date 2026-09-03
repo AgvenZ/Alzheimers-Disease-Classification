@@ -19,9 +19,43 @@ import base64
 import warnings
 import json
 import time
+import sys
 from streamlit import session_state as ss
 
 warnings.filterwarnings('ignore')
+
+# ============================================
+# FIX UNTUK VERCELL - PATH FILE .PKL
+# ============================================
+
+# Path absolut untuk Vercel
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Fungsi untuk mendapatkan path file .pkl
+def get_pkl_path(filename):
+    """Mencari file .pkl di berbagai kemungkinan lokasi"""
+    # 1. Cek di folder yang sama
+    path1 = os.path.join(BASE_DIR, filename)
+    if os.path.exists(path1):
+        return path1
+    
+    # 2. Cek di folder api (jika ada)
+    path2 = os.path.join(BASE_DIR, 'api', filename)
+    if os.path.exists(path2):
+        return path2
+    
+    # 3. Cek di folder src (jika ada)
+    path3 = os.path.join(BASE_DIR, 'src', filename)
+    if os.path.exists(path3):
+        return path3
+    
+    # 4. Cek di current working directory
+    path4 = os.path.join(os.getcwd(), filename)
+    if os.path.exists(path4):
+        return path4
+    
+    # 5. Kembalikan path default
+    return path1
 
 # ============================================
 # !!! FUNGSI INI WAJIB ADA UNTUK LOAD MODEL !!!
