@@ -1,40 +1,31 @@
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
-import numpy as np
 import os
 import sys
-import pickle
 
 app = Flask(__name__)
 
-# Path ke file model
+# Path ke root project
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Debug: cek file yang ada
 print("=" * 50)
 print("Current directory:", os.getcwd())
-print("Files in directory:", os.listdir('.'))
+print("Files in current dir:", os.listdir('.'))
 print("BASE_DIR:", BASE_DIR)
 print("Files in BASE_DIR:", os.listdir(BASE_DIR) if os.path.exists(BASE_DIR) else "Not found")
 print("=" * 50)
 
-# Load model
 def load_model():
     try:
-        # Coba berbagai kemungkinan path
-        possible_paths = [
-            os.path.join(BASE_DIR, 'xgb_hybrid_mi_rfe_optimized.pkl'),
-            os.path.join(os.getcwd(), 'xgb_hybrid_mi_rfe_optimized.pkl'),
-            'xgb_hybrid_mi_rfe_optimized.pkl'
-        ]
-        
-        for path in possible_paths:
-            if os.path.exists(path):
-                print(f"Loading model from: {path}")
-                return joblib.load(path)
-        
-        raise FileNotFoundError("Model file not found")
+        # Cari file di root
+        model_path = os.path.join(BASE_DIR, 'xgb_hybrid_mi_rfe_optimized.pkl')
+        if os.path.exists(model_path):
+            print(f"Loading model from: {model_path}")
+            return joblib.load(model_path)
+        else:
+            raise FileNotFoundError(f"Model not found at {model_path}")
     except Exception as e:
         print(f"Error loading model: {e}")
         return None
@@ -45,28 +36,16 @@ model = load_model()
 def home():
     return jsonify({
         "status": "success",
-        "message": "Alzheimer Prediction API",
-        "endpoints": {
-            "/predict": "POST - Send JSON with features",
-            "/health": "GET - Health check",
-            "/files": "GET - List files"
-        },
-        "model_loaded": model is not None
+        "message": "Alzheimer Prediction API is running!",
+        "model_loaded": model is not None,
+        "files": os.listdir(BASE_DIR)
     })
 
 @app.route('/health')
 def health():
     return jsonify({
         "status": "healthy",
-        "model_loaded": model is not None,
-        "files": os.listdir('.')
-    })
-
-@app.route('/files')
-def list_files():
-    return jsonify({
-        "files": os.listdir('.'),
-        "model_exists": os.path.exists('xgb_hybrid_mi_rfe_optimized.pkl')
+        "model_loaded": model is not None
     })
 
 @app.route('/predict', methods=['POST'])
@@ -74,16 +53,15 @@ def predict():
     try:
         if model is None:
             return jsonify({"error": "Model not loaded"}), 500
-        
+
         data = request.get_json()
-        
-        # Convert to DataFrame
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
         df = pd.DataFrame([data])
-        
-        # Predict
         prob = model.predict_proba(df)[0, 1]
         pred = model.predict(df)[0]
-        
+
         return jsonify({
             "prediction": int(pred),
             "probability": float(prob),
@@ -93,4 +71,4 @@ def predict():
         return jsonify({"error": str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
