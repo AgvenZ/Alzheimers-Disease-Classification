@@ -31,6 +31,35 @@ warnings.filterwarnings('ignore')
 # Path absolut untuk Vercel
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# ============================================
+# KOMPRESI MODEL (Jalankan 1x di lokal)
+# ============================================
+
+import joblib
+import os
+
+def compress_model():
+    """Kompres model untuk mengurangi ukuran"""
+    from sklearn.feature_selection import mutual_info_classif
+    
+    # Definisikan ulang fungsi yang diperlukan
+    def mi_with_seed(X_in, y_in):
+        return mutual_info_classif(X_in, y_in, random_state=42)
+    
+    model_path = "xgb_hybrid_mi_rfe_optimized.pkl"
+    compressed_path = "xgb_hybrid_mi_rfe_optimized_compressed.pkl"
+    
+    if os.path.exists(model_path) and not os.path.exists(compressed_path):
+        with st.spinner("Mengompres model..."):
+            model = joblib.load(model_path)
+            joblib.dump(model, compressed_path, compress=9)
+            st.success(f"Model dikompres! Ukuran: {os.path.getsize(compressed_path) / 1024**2:.2f} MB")
+    elif os.path.exists(compressed_path):
+        st.info(f"Model sudah dikompres: {os.path.getsize(compressed_path) / 1024**2:.2f} MB")
+
+# Panggil fungsi di bagian bawah (opsional)
+# compress_model()
+
 # Fungsi untuk mendapatkan path file .pkl
 def get_pkl_path(filename):
     """Mencari file .pkl di berbagai kemungkinan lokasi"""
@@ -775,10 +804,16 @@ st.markdown("""
 @st.cache_resource
 def load_model():
     try:
-        model = joblib.load("xgb_hybrid_mi_rfe_optimized.pkl")
-        features = joblib.load("selected_features_mi_rfe.pkl")["selected_features"]
-        all_features = joblib.load("train_feature_columns.pkl")["all_features"]
-        defaults = joblib.load("feature_defaults_median.pkl")["feature_defaults_median"]
+        # Coba load dengan menggunakan get_pkl_path
+        model_path = get_pkl_path("xgb_hybrid_mi_rfe_optimized.pkl")
+        features_path = get_pkl_path("selected_features_mi_rfe.pkl")
+        all_features_path = get_pkl_path("train_feature_columns.pkl")
+        defaults_path = get_pkl_path("feature_defaults_median.pkl")
+        
+        model = joblib.load(model_path)
+        features = joblib.load(features_path)["selected_features"]
+        all_features = joblib.load(all_features_path)["all_features"]
+        defaults = joblib.load(defaults_path)["feature_defaults_median"]
         return model, features, all_features, defaults
     except FileNotFoundError as e:
         st.error(f"⚠️ File tidak ditemukan: {e}")
@@ -1277,6 +1312,21 @@ else:
         csv_buffer = io.StringIO()
         template_df.to_csv(csv_buffer, index=False)
         st.download_button("📥 Download Template", data=csv_buffer.getvalue(), file_name="template_15_fitur.csv", mime="text/csv", use_container_width=True)
+
+# ============================================
+# CEK UKURAN FILE .PKL (DEBUG)
+# ============================================
+
+if st.sidebar.checkbox("🔍 Debug Info", value=False):
+    st.sidebar.subheader("📁 Ukuran File .pkl")
+    for file in os.listdir('.'):
+        if file.endswith('.pkl'):
+            size_mb = os.path.getsize(file) / (1024 * 1024)
+            st.sidebar.write(f"- {file}: {size_mb:.2f} MB")
+    
+    st.sidebar.subheader("📦 Dependencies")
+    st.sidebar.write(f"Python: {sys.version}")
+    st.sidebar.write(f"Joblib: {joblib.__version__}")
 
 # ============================================
 # FOOTER
