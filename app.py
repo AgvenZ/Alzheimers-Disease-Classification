@@ -1,5 +1,5 @@
 # app.py
-# SISTEM KLASIFIKASI PENYAKIT ALZHEIMER - FINAL EDITION
+# SISTEM KLASIFIKASI PENYAKIT ALZHEIMER - FINAL EDITION (FIXED)
 # ========================================================================
 
 import streamlit as st
@@ -120,37 +120,126 @@ st.markdown("""
     .sidebar-toggle {
         display: none;
         position: fixed;
-        top: 1rem;
-        left: 1rem;
-        z-index: 100;
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255,255,255,0.15);
-        border-radius: 50%;
-        width: 48px;
-        height: 48px;
-        font-size: 1.5rem;
-        color: white;
+        top: 0.7rem;
+        left: 0.7rem;
+        z-index: 1000;
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(192, 132, 252, 0.15));
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1.5px solid rgba(192, 132, 252, 0.4);
+        border-radius: 14px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.35rem;
+        color: #c084fc;
         cursor: pointer;
-        transition: 0.3s;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 16px rgba(76, 29, 149, 0.4);
     }
     .sidebar-toggle:hover {
-        background: rgba(255,255,255,0.2);
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(192, 132, 252, 0.25));
+        border-color: rgba(192, 132, 252, 0.7);
         transform: scale(1.05);
+        color: #fff;
     }
+    .sidebar-toggle:active {
+        transform: scale(0.95);
+    }
+
+    /* Backdrop overlay (saat sidebar mobile terbuka) */
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(2px);
+        z-index: 998;
+    }
+    .sidebar-backdrop.show {
+        display: block;
+    }
+
+    /* Mobile responsive - tablet portrait & HP */
     @media (max-width: 768px) {
         .sidebar-toggle {
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
         }
         [data-testid="stSidebar"] {
-            width: 280px !important;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
+            width: 260px !important;
+            min-width: 260px !important;
+            max-width: 260px !important;
+            transform: translateX(-100%) !important;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
+            z-index: 999 !important;
+            box-shadow: 8px 0 40px rgba(0,0,0,0.6) !important;
         }
+        [data-testid="stSidebar"][aria-expanded="true"],
         [data-testid="stSidebar"].open {
-            transform: translateX(0);
+            transform: translateX(0) !important;
+        }
+
+        /* Padding content utama geser agar tidak ketutup tombol toggle */
+        .main .block-container {
+            padding-top: 4rem !important;
+            padding-left: 0.8rem !important;
+            padding-right: 0.8rem !important;
+        }
+
+        /* Radio button navigasi di sidebar HP - lebih jelas & bisa di-tap */
+        [data-testid="stSidebar"] label {
+            padding: 0.6rem 0.7rem !important;
+            border-radius: 10px !important;
+            margin-bottom: 0.25rem !important;
+            font-size: 0.9rem !important;
+            transition: all 0.2s ease !important;
+            min-height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        [data-testid="stSidebar"] label:hover {
+            background: rgba(168, 85, 247, 0.1) !important;
+        }
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2 {
+            font-size: 1rem !important;
+            line-height: 1.3 !important;
+            margin: 0 !important;
+        }
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+            font-size: 0.78rem !important;
+            line-height: 1.3 !important;
+            margin: 0.2rem 0 !important;
+        }
+    }
+
+    /* HP kecil (<= 480px) */
+    @media (max-width: 480px) {
+        .sidebar-toggle {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            top: 0.5rem;
+            left: 0.5rem;
+        }
+        [data-testid="stSidebar"] {
+            width: 240px !important;
+            min-width: 240px !important;
+            max-width: 240px !important;
+        }
+        .main .block-container {
+            padding-top: 3.5rem !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+        [data-testid="stSidebar"] label {
+            padding: 0.5rem 0.6rem !important;
+            font-size: 0.82rem !important;
+            min-height: 38px !important;
         }
     }
 
@@ -236,7 +325,237 @@ st.markdown("""
         transform: scale(0.97) !important;
     }
 
-    /* Inputs */
+    /* ============================================
+       FORM INPUT - EYE CATCHING (TEAL PEARL THEME)
+       ============================================ */
+
+    /* Form container - card premium */
+    .stForm {
+        background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(168,85,247,0.04) 100%) !important;
+        border-radius: 28px !important;
+        padding: 2rem 1.8rem !important;
+        border: 1px solid rgba(168, 85, 247, 0.22) !important;
+        backdrop-filter: blur(16px) !important;
+        box-shadow: 0 20px 60px rgba(10, 10, 46, 0.4), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+    .stForm::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 2px !important;
+        background: linear-gradient(90deg, transparent 0%, #a855f7 50%, #c084fc 100%) !important;
+    }
+
+    /* Form header - eye-catching */
+    .form-header {
+        text-align: center !important;
+        margin-bottom: 2rem !important;
+        padding: 1.2rem 1rem !important;
+        background: linear-gradient(135deg, rgba(168,85,247,0.08) 0%, rgba(192,132,252,0.05) 100%) !important;
+        border-radius: 20px !important;
+        border: 1px solid rgba(168, 85, 247, 0.22) !important;
+        position: relative !important;
+    }
+    .form-header h3 {
+        color: #fff !important;
+        font-weight: 800 !important;
+        font-size: 1.6rem !important;
+        margin: 0 !important;
+        background: linear-gradient(135deg, #ffffff 0%, #c084fc 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        letter-spacing: -0.02em !important;
+    }
+    .form-header p {
+        color: rgba(192, 132, 252, 0.8) !important;
+        font-size: 0.92rem !important;
+        margin: 0.5rem 0 0 0 !important;
+        font-weight: 400 !important;
+        letter-spacing: 0.2px !important;
+    }
+
+    /* Input wrapper - setiap input dibungkus card */
+    .input-field-wrapper {
+        background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(168,85,247,0.03) 100%) !important;
+        border: 1px solid rgba(168, 85, 247, 0.18) !important;
+        border-radius: 18px !important;
+        padding: 0.55rem 0.85rem !important;
+        margin-bottom: 0.35rem !important;
+        transition: all 0.3s ease !important;
+        position: relative !important;
+        backdrop-filter: blur(8px) !important;
+    }
+    .input-field-wrapper:hover {
+        border-color: rgba(168, 85, 247, 0.5) !important;
+        background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(168,85,247,0.08) 100%) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 20px rgba(76, 29, 149, 0.4) !important;
+    }
+    .input-field-wrapper:focus-within {
+        border-color: #a855f7 !important;
+        background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(168,85,247,0.14) 100%) !important;
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2), 0 8px 20px rgba(76, 29, 149, 0.4) !important;
+    }
+
+    /* Input label (header) */
+    .input-field-label {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.6rem !important;
+        margin-bottom: 0.35rem !important;
+        color: #f0f0f0 !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        letter-spacing: 0.2px !important;
+    }
+    .input-field-number {
+        background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%) !important;
+        color: #fff !important;
+        font-weight: 800 !important;
+        font-size: 0.78rem !important;
+        width: 28px !important;
+        height: 22px !important;
+        border-radius: 7px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        box-shadow: 0 2px 6px rgba(168, 85, 247, 0.5) !important;
+        border: 1px solid rgba(192, 132, 252, 0.6) !important;
+    }
+    .input-field-icon {
+        font-size: 1.1rem !important;
+        margin-left: auto !important;
+        opacity: 0.85 !important;
+    }
+    .input-field-desc {
+        color: rgba(192, 132, 252, 0.7) !important;
+        font-size: 0.72rem !important;
+        margin-top: 0.35rem !important;
+        padding-left: 0.3rem !important;
+        font-style: italic !important;
+        line-height: 1.4 !important;
+        display: block !important;
+    }
+
+    /* Number input - lebih elegant (ungu) */
+    .stNumberInput {
+        margin-bottom: 0 !important;
+    }
+    .stNumberInput > div {
+        background: rgba(10, 10, 46, 0.4) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(168, 85, 247, 0.22) !important;
+        transition: all 0.25s ease !important;
+    }
+    .stNumberInput > div:hover {
+        border-color: rgba(168, 85, 247, 0.5) !important;
+        background: rgba(10, 10, 46, 0.55) !important;
+    }
+    .stNumberInput > div:focus-within {
+        border-color: #a855f7 !important;
+        box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.22) !important;
+    }
+    .stNumberInput input {
+        background: transparent !important;
+        border: none !important;
+        color: #fff !important;
+        padding: 0.65rem 0.9rem !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.3px !important;
+        min-height: 44px !important;
+        width: 100% !important;
+    }
+    .stNumberInput input:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    .stNumberInput label {
+        display: none !important;  /* label dipindah ke HTML custom */
+    }
+    .stNumberInput button {
+        background: rgba(168, 85, 247, 0.18) !important;
+        border: none !important;
+        color: #c084fc !important;
+        font-size: 1.1rem !important;
+        padding: 0.3rem 0.7rem !important;
+        border-radius: 10px !important;
+        transition: all 0.2s ease !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    .stNumberInput button:hover {
+        background: rgba(168, 85, 247, 0.45) !important;
+        color: #fff !important;
+        transform: scale(1.05) !important;
+    }
+    .stNumberInput button:active {
+        transform: scale(0.95) !important;
+    }
+
+    /* Row separator dalam form */
+    .form-row-separator {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.8rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        grid-column: 1 / -1 !important;
+    }
+    .form-row-separator .line {
+        flex: 1 !important;
+        height: 1px !important;
+        background: linear-gradient(90deg, transparent 0%, rgba(144, 224, 239, 0.3) 50%, transparent 100%) !important;
+    }
+    .form-row-separator .label {
+        color: rgba(144, 224, 239, 0.7) !important;
+        font-size: 0.78rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 1.5px !important;
+        text-transform: uppercase !important;
+    }
+    .form-row-separator .icon {
+        font-size: 0.95rem !important;
+        opacity: 0.8 !important;
+    }
+
+    /* Form submit button */
+    .stForm .stButton {
+        display: flex !important;
+        justify-content: center !important;
+        margin-top: 2rem !important;
+    }
+    .stForm .stButton > button {
+        width: auto !important;
+        min-width: 280px !important;
+        padding: 0.9rem 3rem !important;
+        font-size: 1.1rem !important;
+        border-radius: 50px !important;
+    }
+    .stForm .stCaption {
+        text-align: center !important;
+        display: block !important;
+        color: rgba(144, 224, 239, 0.5) !important;
+        font-size: 0.8rem !important;
+        margin-top: 0.7rem !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    /* Grid input columns - lebih rapi */
+    .input-grid {
+        display: grid !important;
+        gap: 1rem !important;
+    }
+
+    /* Inputs lain */
     .stNumberInput input, .stTextInput input, .stSelectbox select, .stTextArea textarea {
         background: rgba(255,255,255,0.07) !important;
         border: 1px solid rgba(255,255,255,0.1) !important;
@@ -258,15 +577,6 @@ st.markdown("""
         font-weight: 500 !important;
         font-size: 0.85rem !important;
         letter-spacing: 0.3px;
-    }
-
-    /* Caption untuk instruksi input (tanpa rentang) */
-    .input-caption {
-        color: rgba(255,255,255,0.4);
-        font-size: 0.75rem;
-        font-style: italic;
-        margin-top: -0.3rem;
-        margin-bottom: 0.5rem;
     }
 
     /* Tabs */
@@ -407,7 +717,7 @@ st.markdown("""
         letter-spacing: 0.3px;
     }
 
-    /* Uploader - beri jarak lebih dan geser ke bawah */
+    /* Uploader */
     .stFileUploader {
         margin-bottom: 2.5rem !important;
         margin-top: 1rem !important;
@@ -464,6 +774,114 @@ st.markdown("""
         background: rgba(255,255,255,0.25);
     }
 
+    /* ============================================
+       PERBAIKAN 3: FITUR FINAL TAMPLILAN RAPI
+       ============================================ */
+    
+    .feature-grid-container {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.8rem !important;
+        margin-top: 0.3rem !important;
+        margin-bottom: 0.6rem !important;
+    }
+
+    /* === LAYOUT KARTU DIRATAKAN KE KIRI + DESKRIPSI TIDAK TERPOTONG === */
+    .feature-card {
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-radius: 14px !important;
+        padding: 0.55rem 0.8rem !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        flex-direction: column !important;   /* NOMOR + NAMA di ATAS, DESKRIPSI di BAWAH */
+        align-items: flex-start !important;   /* SEMUA RATA KIRI */
+        justify-content: flex-start !important;
+        gap: 0.25rem !important;
+        text-align: left !important;
+        min-height: 78px !important;
+        backdrop-filter: blur(8px);
+    }
+    
+    .feature-card:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+        transform: translateY(-3px) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    .feature-number-badge {
+        background: linear-gradient(135deg, #a855f7, #c084fc) !important;
+        color: #fff !important;
+        border-radius: 50% !important;
+        width: 32px !important;
+        height: 32px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 0.78rem !important;
+        font-weight: 800 !important;
+        flex-shrink: 0 !important;
+        align-self: flex-start !important;  /* RATA KIRI */
+        margin: 0 !important;
+        box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4) !important;
+        border: 1px solid rgba(192, 132, 252, 0.6) !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    /* BARIS NOMOR + NAMA FITUR (sejajar kiri) */
+    .feature-header-row {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 0.6rem !important;
+        width: 100% !important;
+        text-align: left !important;
+    }
+    
+    .feature-name {
+        color: rgba(255,255,255,0.92) !important;
+        font-size: 0.85rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.2px !important;
+        text-align: left !important;
+        line-height: 1.2 !important;
+    }
+
+    /* === DESKRIPSI: TIDAK DIPOTONG, RATA KIRI, BISA MULTIBARIS === */
+    .feature-desc {
+        color: rgba(202, 240, 248, 0.7) !important;
+        font-size: 0.72rem !important;
+        margin: 0 !important;          /* HAPUS margin-left:auto (tadi dorong ke kanan) */
+        margin-top: 0.1rem !important;
+        padding-left: 0 !important;
+        text-align: left !important;   /* PAKSA RATA KIRI */
+        white-space: normal !important; /* BOLEH MULTI BARIS */
+        overflow: visible !important;  /* JANGAN disembunyikan */
+        text-overflow: clip !important; /* JANGAN dipotong ... */
+        width: 100% !important;        /* PENUH 1 baris kartu */
+        max-width: none !important;    /* HAPUS max-width (tadi cuma 120px!) */
+        line-height: 1.35 !important;
+        word-wrap: break-word !important;
+        word-break: break-word !important;
+    }
+    
+    @media (max-width: 1024px) {
+        .feature-grid-container {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .feature-grid-container {
+            grid-template-columns: 1fr !important;
+        }
+        .feature-desc {
+            max-width: 80px !important;
+        }
+    }
+
     /* Spacing untuk fitur list 3 baris */
     .feature-list-container {
         margin-top: 1rem;
@@ -516,19 +934,36 @@ st.markdown("""
         .result-alzheimer, .result-non-alzheimer { padding: 1.5rem; }
         .result-alzheimer h1, .result-non-alzheimer h1 { font-size: 2rem !important; }
         .feature-item { min-width: 100px; font-size: 0.7rem; padding: 0.3rem 0.5rem; }
+        .feature-grid-container {
+            grid-template-columns: 1fr !important;
+        }
     }
     @media (max-width: 480px) {
         .main .block-container { padding: 0.8rem; border-radius: 16px; }
         .card-glass { padding: 1rem; }
-        .stNumberInput input, .stTextInput input { padding: 0.5rem 0.8rem !important; font-size: 0.85rem !important; }
+        .stNumberInput input { padding: 0.5rem 0.8rem !important; font-size: 0.85rem !important; min-height: 44px !important; }
         .stTabs [data-baseweb="tab"] { padding: 0.2rem 0.5rem; font-size: 0.65rem; }
         .stButton > button { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
         .feature-item { min-width: 80px; font-size: 0.65rem; padding: 0.2rem 0.4rem; }
+        .feature-number-badge { width: 26px !important; height: 26px !important; font-size: 0.65rem !important; }
+        .feature-name { font-size: 0.75rem !important; }
+        .feature-desc { display: none !important; }
     }
 
     /* Batch result spacing */
     .batch-result {
         margin-top: 2rem;
+    }
+    
+    /* ============================================
+       PERBAIKAN 2: CONFUSION MATRIX TEXT HITAM
+       ============================================ */
+    
+    /* Style untuk heatmap text - warna hitam agar kontras */
+    .plotly .heatmap .text {
+        fill: #000000 !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
     }
 </style>
 
@@ -711,22 +1146,50 @@ st.markdown("""
         const sidebar = document.querySelector('[data-testid="stSidebar"]');
         if (!sidebar) return;
         if (!document.querySelector('.sidebar-toggle')) {
+            // Create backdrop
+            const backdrop = document.createElement('div');
+            backdrop.className = 'sidebar-backdrop';
+            document.body.prepend(backdrop);
+
+            // Create toggle button
             const btn = document.createElement('button');
             btn.className = 'sidebar-toggle';
             btn.innerHTML = '☰';
             btn.setAttribute('aria-label', 'Toggle sidebar');
             btn.style.cssText = 'display:flex; align-items:center; justify-content:center;';
             document.body.prepend(btn);
-            btn.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-                btn.innerHTML = sidebar.classList.contains('open') ? '✕' : '☰';
+
+            const closeSidebar = () => {
+                sidebar.classList.remove('open');
+                backdrop.classList.remove('show');
+                btn.innerHTML = '☰';
+            };
+            const openSidebar = () => {
+                sidebar.classList.add('open');
+                backdrop.classList.add('show');
+                btn.innerHTML = '✕';
+            };
+
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
             });
+            backdrop.addEventListener('click', closeSidebar);
             document.addEventListener('click', (e) => {
                 if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
                     if (!sidebar.contains(e.target) && !btn.contains(e.target)) {
-                        sidebar.classList.remove('open');
-                        btn.innerHTML = '☰';
+                        closeSidebar();
                     }
+                }
+            });
+            // Tutup sidebar otomatis saat user memilih menu navigasi
+            sidebar.addEventListener('click', (e) => {
+                if (e.target.closest('label') && window.innerWidth <= 768) {
+                    setTimeout(closeSidebar, 200);
                 }
             });
         }
@@ -770,21 +1233,21 @@ FINAL_FEATURES = [
 
 # Deskripsi singkat TANPA rentang angka
 FEATURE_INFO = {
-    "Age": {"desc": "Usia pasien"},
-    "AlcoholConsumption": {"desc": "Konsumsi alkohol per minggu"},
+    "Age": {"desc": "Usia pasien (tahun)"},
+    "AlcoholConsumption": {"desc": "Konsumsi alkohol"},
     "DietQuality": {"desc": "Skor kualitas diet"},
     "SleepQuality": {"desc": "Skor kualitas tidur"},
-    "DiastolicBP": {"desc": "Tekanan darah diastolik"},
-    "CholesterolTotal": {"desc": "Kolesterol total"},
-    "CholesterolLDL": {"desc": "Kolesterol LDL"},
-    "CholesterolHDL": {"desc": "Kolesterol HDL"},
-    "MMSE": {"desc": "Skor MMSE (Mini-Mental)"},
+    "DiastolicBP": {"desc": "Tekanan darah diastolik (mmHg)"},
+    "CholesterolTotal": {"desc": "Kolesterol total (mg/dL)"},
+    "CholesterolLDL": {"desc": "Kolesterol LDL (mg/dL)"},
+    "CholesterolHDL": {"desc": "Kolesterol HDL (mg/dL)"},
+    "MMSE": {"desc": "Skor MMSE"},
     "FunctionalAssessment": {"desc": "Skor penilaian fungsional"},
-    "MemoryComplaints": {"desc": "Keluhan memori (0=Tidak, 1=Ya)"},
-    "BehavioralProblems": {"desc": "Masalah perilaku (0=Tidak, 1=Ya)"},
-    "ADL": {"desc": "Skor ADL (Aktivitas Harian)"},
-    "PersonalityChanges": {"desc": "Perubahan kepribadian (0=Tidak, 1=Ya)"},
-    "DifficultyCompletingTasks": {"desc": "Kesulitan tugas (0=Tidak, 1=Ya)"}
+    "MemoryComplaints": {"desc": "Keluhan memori"},
+    "BehavioralProblems": {"desc": "Masalah perilaku"},
+    "ADL": {"desc": "Skor ADL"},
+    "PersonalityChanges": {"desc": "Perubahan kepribadian"},
+    "DifficultyCompletingTasks": {"desc": "Kesulitan tugas"}
 }
 
 # ============================================
@@ -897,7 +1360,7 @@ if page == "🏠 Home":
         """, unsafe_allow_html=True)
 
 # ============================================
-# HALAMAN PREDIKSI 1 PASIEN
+# HALAMAN PREDIKSI 1 PASIEN (DIPERBAIKI)
 # ============================================
 
 elif page == "📊 Prediksi 1 Pasien":
@@ -913,39 +1376,89 @@ elif page == "📊 Prediksi 1 Pasien":
         st.stop()
     
     with st.form("prediction_form"):
-        st.markdown("### 📋 Form Input (15 Fitur Final)")
+        # Header form dengan style sederhana
+        st.markdown("""
+        <div class='form-header'>
+            <h3>📋 Form Input (15 Fitur Final)</h3>
+            <p>Isi semua field dengan nilai yang sesuai</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Menggunakan 3 kolom untuk form input
         col1, col2, col3 = st.columns(3)
         input_data = {}
         features_to_show = FINAL_FEATURES
+        
+        # Bagi fitur menjadi 3 kolom
         third = len(features_to_show) // 3
         col1_features = features_to_show[:third]
         col2_features = features_to_show[third:2*third]
         col3_features = features_to_show[2*third:]
         
-        def create_input(col, feature_list):
+        # Icon mapping per fitur untuk eye-catching
+        FEATURE_ICONS = {
+            "Age": "🎂", "AlcoholConsumption": "🍷", "DietQuality": "🥗",
+            "SleepQuality": "😴", "DiastolicBP": "💓", "CholesterolTotal": "🩸",
+            "CholesterolLDL": "🩸", "CholesterolHDL": "🩸", "MMSE": "🧠",
+            "FunctionalAssessment": "⚙️", "MemoryComplaints": "💭",
+            "BehavioralProblems": "😟", "ADL": "🧬", "PersonalityChanges": "🎭",
+            "DifficultyCompletingTasks": "🧩"
+        }
+
+        def create_input(col, feature_list, start_num=0):
             with col:
-                st.markdown("**Fitur Klinis**")
-                for feature in feature_list:
+                for idx, feature in enumerate(feature_list):
                     display_name = feature.replace('_', ' ').title()
                     info = FEATURE_INFO.get(feature, {})
                     desc = info.get("desc", "")
-                    val = st.number_input(
-                        display_name,
-                        value=0.0,
-                        format="%.0f",
-                        key=f"input_{feature}",
-                        help=desc
-                    )
+                    num = start_num + idx + 1
+                    icon = FEATURE_ICONS.get(feature, "📊")
+                    is_binary = feature in ["MemoryComplaints", "BehavioralProblems", "PersonalityChanges", "DifficultyCompletingTasks"]
+
+                    # Card wrapper dengan badge nomor + icon
+                    st.markdown(f"""
+                    <div class='input-field-wrapper'>
+                        <div class='input-field-label'>
+                            <span class='input-field-number'>{num:02d}</span>
+                            <span>{display_name}</span>
+                            <span class='input-field-icon'>{icon}</span>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                    # Input field (label disembunyikan via CSS karena sudah di HTML)
+                    if is_binary:
+                        val = st.number_input(
+                            f"{num:02d} {display_name}",
+                            value=0.0, step=1.0, min_value=0.0, max_value=1.0,
+                            format="%.0f", key=f"input_{feature}",
+                            help=desc, label_visibility="collapsed"
+                        )
+                    else:
+                        val = st.number_input(
+                            f"{num:02d} {display_name}",
+                            value=0.0, step=0.01, min_value=0.0,
+                            format="%.2f", key=f"input_{feature}",
+                            help=desc, label_visibility="collapsed"
+                        )
+
+                    # Description di bawah input
                     if desc:
-                        st.caption(f"📌 {desc}")
+                        st.markdown(
+                            f"<span class='input-field-desc'>📌 {desc}</span>",
+                            unsafe_allow_html=True
+                        )
                     input_data[feature] = val
         
-        create_input(col1, col1_features)
-        create_input(col2, col2_features)
-        create_input(col3, col3_features)
+        # Buat input di masing-masing kolom
+        create_input(col1, col1_features, 0)
+        create_input(col2, col2_features, len(col1_features))
+        create_input(col3, col3_features, len(col1_features) + len(col2_features))
         
-        st.markdown("---")
-        submitted = st.form_submit_button("🔮 Prediksi", use_container_width=True)
+        # Tombol submit di tengah
+        col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
+        with col_btn2:
+            submitted = st.form_submit_button("🔮 Prediksi", use_container_width=True)
     
     if submitted:
         with st.spinner("🧠 Menganalisis dengan AI..."):
@@ -963,14 +1476,14 @@ elif page == "📊 Prediksi 1 Pasien":
                         st.markdown(f"""
                         <div class='result-alzheimer' style='padding:1.5rem;'>
                             <h1 style='margin:0; font-size:2.5rem;'>⚠️ Alzheimer</h1>
-                            <p style='font-size:1.1rem; opacity:0.9;'>Probabilitas: {prob*100:.2f}% (Threshold: {ss.threshold:.2f})</p>
+                            <p style='font-size:1.1rem; opacity:0.9;'>Probabilitas: {prob*100:.2f}%</p>
                         </div>
                         """, unsafe_allow_html=True)
                     else:
                         st.markdown(f"""
                         <div class='result-non-alzheimer' style='padding:1.5rem;'>
                             <h1 style='margin:0; font-size:2.5rem;'>✅ Non-Alzheimer</h1>
-                            <p style='font-size:1.1rem; opacity:0.9;'>Probabilitas: {prob*100:.2f}% (Threshold: {ss.threshold:.2f})</p>
+                            <p style='font-size:1.1rem; opacity:0.9;'>Probabilitas: {prob*100:.2f}%</p>
                         </div>
                         """, unsafe_allow_html=True)
                     
@@ -978,54 +1491,28 @@ elif page == "📊 Prediksi 1 Pasien":
                     <div style='background: rgba(255,255,255,0.03); backdrop-filter: blur(4px); padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-top: 1rem;'>
                         <p><strong>🧠 Diagnosis:</strong> {'Alzheimer' if final_pred == 1 else 'Non-Alzheimer'}</p>
                         <p><strong>📊 Probabilitas:</strong> {prob*100:.2f}%</p>
-                        <p><strong>🎯 Threshold:</strong> {ss.threshold:.2f}</p>
                         <p><strong>⏱️ Waktu:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
                     </div>
                     """, unsafe_allow_html=True)
                 
                 with col_res2:
-                    fig = go.Figure(go.Indicator(
-                        mode="gauge+number+delta",
-                        value=prob * 100,
-                        title={'text': "Probabilitas Alzheimer", 'font': {'size': 16, 'color': '#f0f0f0'}},
-                        domain={'x': [0, 1], 'y': [0, 1]},
-                        gauge={
-                            'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': '#ccc'},
-                            'bar': {'color': "#6a11cb"},
-                            'bgcolor': "rgba(255,255,255,0.05)",
-                            'borderwidth': 2,
-                            'bordercolor': "rgba(255,255,255,0.1)",
-                            'steps': [
-                                {'range': [0, 30], 'color': 'rgba(46, 204, 113, 0.3)'},
-                                {'range': [30, 70], 'color': 'rgba(241, 196, 15, 0.3)'},
-                                {'range': [70, 100], 'color': 'rgba(231, 76, 60, 0.3)'}
-                            ],
-                            'threshold': {
-                                'line': {'color': "#e74c3c", 'width': 4},
-                                'thickness': 0.75,
-                                'value': ss.threshold * 100
-                            }
-                        }
-                    ))
-                    fig.update_layout(
-                        height=300,
-                        margin=dict(l=10, r=10, t=40, b=10),
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        plot_bgcolor='rgba(0,0,0,0)',
-                        font_color='#f0f0f0'
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-                    
+                    # Tentukan warna & label risiko
                     if prob < 0.3:
                         risk_level, risk_color = "🟢 RISIKO RENDAH", "#2ecc71"
                     elif prob < 0.7:
                         risk_level, risk_color = "🟡 RISIKO SEDANG", "#f1c40f"
                     else:
                         risk_level, risk_color = "🔴 RISIKO TINGGI", "#e74c3c"
+
+                    # Progress bar CSS (tanpa gambar/gauge)
                     st.markdown(f"""
-                    <div style='background: rgba(255,255,255,0.03); backdrop-filter: blur(4px); padding: 0.8rem; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); margin-top: 0.5rem;'>
-                        <h4 style='color: rgba(255,255,255,0.6); margin:0;'>Interpretasi Risiko</h4>
-                        <h2 style='color: {risk_color}; margin:0;'>{risk_level}</h2>
+                    <div style='background: rgba(255,255,255,0.03); backdrop-filter: blur(8px); padding: 1.2rem 1.4rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); text-align: center;'>
+                        <h4 style='color: rgba(255,255,255,0.6); margin:0 0 0.6rem 0; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px;'>PROBABILITAS ALZHEIMER</h4>
+                        <div style='font-size: 3rem; font-weight: 800; color: {risk_color}; line-height: 1; margin-bottom: 0.3rem;'>{prob*100:.1f}<span style='font-size: 1.4rem; opacity: 0.7;'>%</span></div>
+                        <div style='background: rgba(255,255,255,0.08); border-radius: 12px; height: 14px; overflow: hidden; margin: 0.8rem 0 0.6rem 0; position: relative;'>
+                            <div style='background: linear-gradient(90deg, {risk_color} 0%, {risk_color}dd 100%); height: 100%; width: {prob*100:.1f}%; border-radius: 12px; box-shadow: 0 0 12px {risk_color}66; transition: width 0.6s ease;'></div>
+                        </div>
+                        <h3 style='color: {risk_color}; margin: 0.6rem 0 0 0; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.5px;'>{risk_level}</h3>
                     </div>
                     """, unsafe_allow_html=True)
                 
@@ -1038,7 +1525,7 @@ elif page == "📊 Prediksi 1 Pasien":
                 st.error(f"⚠️ Terjadi kesalahan: {e}")
 
 # ============================================
-# HALAMAN BATCH CSV (dengan jarak)
+# HALAMAN BATCH CSV
 # ============================================
 
 elif page == "📁 Batch CSV":
@@ -1053,7 +1540,6 @@ elif page == "📁 Batch CSV":
         st.error("⚠️ Model tidak dapat dimuat.")
         st.stop()
     
-    # Uploader dengan margin bawah yang cukup
     st.markdown("<br>", unsafe_allow_html=True)
     uploaded_file = st.file_uploader("📤 Upload file CSV", type=['csv'], help="File harus memiliki 15 fitur final")
     
@@ -1069,7 +1555,6 @@ elif page == "📁 Batch CSV":
                 with st.expander("📊 Preview Data"):
                     st.dataframe(df[FINAL_FEATURES].head(10), use_container_width=True)
                 
-                # Beri jarak sebelum tombol prediksi
                 st.markdown("<br>", unsafe_allow_html=True)
                 
                 if st.button("🚀 Prediksi Batch", use_container_width=True):
@@ -1091,7 +1576,6 @@ elif page == "📁 Batch CSV":
                             status_text.text(f"Memproses {end}/{total} baris...")
                         status_text.text("Selesai!")
                         
-                        # Hasil dengan jarak
                         st.markdown("<div class='batch-result'>", unsafe_allow_html=True)
                         st.markdown("### 📊 Hasil Prediksi Batch")
                         col1, col2, col3 = st.columns(3)
@@ -1120,7 +1604,7 @@ elif page == "📁 Batch CSV":
             st.error(f"⚠️ Error membaca file: {e}")
 
 # ============================================
-# HALAMAN MODEL & EVALUASI
+# HALAMAN MODEL & EVALUASI (DIPERBAIKI)
 # ============================================
 
 elif page == "📈 Model & Evaluasi":
@@ -1162,32 +1646,55 @@ elif page == "📈 Model & Evaluasi":
         """, unsafe_allow_html=True)
     
     st.markdown("### 📊 Visualisasi Confusion Matrix (Data Uji)")
+    
+    # PERBAIKAN 2: Confusion Matrix dengan text hitam
     cm = np.array([[270, 10], [15, 135]])
+    
+    # Buat heatmap dengan text color hitam
     fig_cm = go.Figure(data=go.Heatmap(
         z=cm,
         x=['Non-Alzheimer', 'Alzheimer'],
         y=['Non-Alzheimer', 'Alzheimer'],
         text=cm,
         texttemplate="%{text}",
-        textfont={"size": 16, "color": "white"},
+        textfont={"size": 18, "color": "#000000"},  # Warna hitam
         colorscale='Blues',
         showscale=True,
-        hoverongaps=False
+        hoverongaps=False,
+        hovertemplate='<b>%{x}</b><br>%{y}<br>Jumlah: %{z}<extra></extra>'
     ))
     fig_cm.update_layout(
-        title='Confusion Matrix',
-        xaxis_title='Predicted',
-        yaxis_title='Actual',
-        height=400,
-        margin=dict(l=40, r=40, t=60, b=40),
+        title={
+            'text': 'Confusion Matrix - Data Uji',
+            'font': {'size': 20, 'color': '#f0f0f0'}
+        },
+        xaxis_title={
+            'text': 'Predicted',
+            'font': {'size': 16, 'color': '#f0f0f0'}
+        },
+        yaxis_title={
+            'text': 'Actual',
+            'font': {'size': 16, 'color': '#f0f0f0'}
+        },
+        height=450,
+        width=500,
+        margin=dict(l=60, r=60, t=80, b=60),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        font_color='#f0f0f0'
+        font_color='#f0f0f0',
+        xaxis=dict(
+            tickfont=dict(color='#f0f0f0', size=14),
+            gridcolor='rgba(255,255,255,0.05)'
+        ),
+        yaxis=dict(
+            tickfont=dict(color='#f0f0f0', size=14),
+            gridcolor='rgba(255,255,255,0.05)'
+        )
     )
     st.plotly_chart(fig_cm, use_container_width=True)
 
 # ============================================
-# HALAMAN DAFTAR FITUR & TEMPLATE (3 baris rapi)
+# HALAMAN DAFTAR FITUR & TEMPLATE (DIPERBAIKI)
 # ============================================
 
 else:
@@ -1200,41 +1707,31 @@ else:
     
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.markdown("<div class='card-glass'><h3>📋 15 Fitur Final</h3></div>", unsafe_allow_html=True)
-        # Buat 3 baris: 5 fitur per baris
-        row1 = FINAL_FEATURES[:5]
-        row2 = FINAL_FEATURES[5:10]
-        row3 = FINAL_FEATURES[10:15]
+        st.markdown("<div class='card-glass' style='margin-bottom: 0.4rem;'><h3>📋 15 Fitur Final</h3></div>", unsafe_allow_html=True)
         
-        # Baris 1
-        cols1 = st.columns(5)
-        for idx, feature in enumerate(row1):
-            with cols1[idx]:
-                st.markdown(f"""
-                <div class='feature-item'>
-                    <span class='feature-number'>{idx+1:02d}.</span> {feature}
-                </div>
-                """, unsafe_allow_html=True)
+        # PERBAIKAN 3: Tampilan fitur final yang lebih rapi dengan grid 3 kolom
+        st.markdown("""
+        <div style='margin-top: 0.2rem;'>
+            <div class='feature-grid-container'>
+        """, unsafe_allow_html=True)
         
-        # Baris 2
-        cols2 = st.columns(5)
-        for idx, feature in enumerate(row2):
-            with cols2[idx]:
-                st.markdown(f"""
-                <div class='feature-item'>
-                    <span class='feature-number'>{idx+6:02d}.</span> {feature}
+        # Buat feature cards dalam grid 3 kolom - DESKRIPSI PENUH, RATA KIRI
+        for idx, feature in enumerate(FINAL_FEATURES):
+            display_name = feature.replace('_', ' ').title()
+            info = FEATURE_INFO.get(feature, {})
+            desc = info.get("desc", "")
+            
+            st.markdown(f"""
+            <div class='feature-card'>
+                <div class='feature-header-row'>
+                    <span class='feature-number-badge'>{idx+1:02d}</span>
+                    <span class='feature-name'>{display_name}</span>
                 </div>
-                """, unsafe_allow_html=True)
+                <span class='feature-desc'>{desc}</span>
+            </div>
+            """, unsafe_allow_html=True)
         
-        # Baris 3
-        cols3 = st.columns(5)
-        for idx, feature in enumerate(row3):
-            with cols3[idx]:
-                st.markdown(f"""
-                <div class='feature-item'>
-                    <span class='feature-number'>{idx+11:02d}.</span> {feature}
-                </div>
-                """, unsafe_allow_html=True)
+        st.markdown("</div></div>", unsafe_allow_html=True)
     
     with col2:
         st.markdown("<div class='card-glass'><h3>📥 Template CSV</h3><p style='color:rgba(255,255,255,0.5);'>Unduh template untuk batch.</p></div>", unsafe_allow_html=True)
