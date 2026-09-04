@@ -1,6 +1,7 @@
-flask==3.1.2
-joblib==1.4.2
-numpy==2.2.4
+streamlit
 pandas==2.2.3
+numpy==2.2.4
+joblib==1.4.2
 scikit-learn==1.6.1
 xgboost==2.1.4
+plotly
