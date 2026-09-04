@@ -37,7 +37,6 @@ def mi_with_seed(X_in, y_in):
 
 st.set_page_config(
     page_title="🧠 Alzheimer Prediction System",
-    page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -830,8 +829,7 @@ def preprocess_input_batch(df):
 # ============================================
 
 with st.sidebar:
-    st.image("https://img.icons8.com/color/240/000000/brain.png", width=80)
-    st.markdown("<h2 style='text-align: center; color: #fff;'>🧠 Alzheimer</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: #fff;'>🧠 Alzheimer’s Disease Classification</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: rgba(255,255,255,0.5); font-size: 0.9rem;'>Klasifikasi Penyakit Alzheimer</p>", unsafe_allow_html=True)
     st.markdown("---")
     
@@ -1252,7 +1250,7 @@ else:
 
 st.markdown("""
 <div class='footer'>
-    <p>🧠 Sistem Klasifikasi Alzheimer | Implementasi Skripsi Super Advanced</p>
-    <p style='font-size: 0.7rem; opacity:0.5;'>⚠️ Untuk penelitian dan edukasi. Bukan untuk keputusan medis.</p>
+    <p>Alzheimer’s Disease Classification System</p>
+    <p style='font-size: 0.7rem; opacity:0.5;'>© 2026 Agung Iman Wicaksono</p>
 </div>
 """, unsafe_allow_html=True)
